@@ -2,6 +2,7 @@ import { Skeleton } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
   title: {
@@ -74,7 +75,13 @@ const ProductScroll = () => {
   const products = data.slice(0, 5).map((item, index) => {
     return (
       <li key={index} className={classes.product}>
-        <img src={item.img} className={classes.productImage} />
+        {/* <img src={item.img} className={classes.productImage} /> 
+        //phiên bản cũ chưa add path để nhấn vô hình ảnh*/}
+
+        {/* new version that use react router to add path */}
+        <Link to={{ pathname: `/detailProduct/${item._id}` }}>
+          <img src={item.img} className={classes.productImage} />
+        </Link>
 
         <div className={classes.productDetailContainer}>
           <div className={classes.productDetail}>
