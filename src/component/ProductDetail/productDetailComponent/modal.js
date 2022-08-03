@@ -1,16 +1,18 @@
 import React from "react";
 import { makeStyles } from "@mui/styles";
 import PropTypes from "prop-types";
-import { Alert, Grid, Modal, Backdrop } from "@mui/material";
+import { Alert, Grid, Modal, Backdrop, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
 
+import CloseIcon from "@mui/icons-material/Close";
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    zIndex: 99,
   },
   paper: {
     backgroundColor: "white",
@@ -90,50 +92,74 @@ const Modaltransition = ({
     handleClose();
   }, 10000);
 
+  const products = useSelector((state) => state.reducerCart.products);
+  //console.log(products);
+  const sumQuantity = products.reduce((sum, item) => {
+    return sum + item.quantity;
+  }, 0);
+
   return (
     <Modal
       open={open}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+      aria-labelledby="spring-modal-title"
+      aria-describedby="spring-modal-description"
       className={classes.modal}
       closeAfterTransition
-      BackdropComponent={Backdrop}
       BackdropProps={{ timeout: 500 }}
     >
-      <Fade in={open}>
-        <div className={classes.paper}>
-          <Grid container direction="row" justify="center" alignItems="center">
-            <Grid item xs={11}>
-              <Alert severity="success" className={classes.alert}>
-                {" "}
-                Added to bag
-              </Alert>
-            </Grid>
-
-            <Grid item xs={6}>
-              <img src={productDispatch.img} className={classes.img} />
-            </Grid>
-
-            <Grid item xs={6}>
-              <h6>{productDispatch.name}</h6>
-              <p>{productDispatch.message}</p>
-              <p>{productDispatch.size}</p>
-              <span>{productDispatch.price.toLocaleString()}</span>
-            </Grid>
-
-            <Grid item xs={6}>
-              <div className={classes.Checkout}>
-                <button className={classes.CheckoutButton}>View Cart</button>
-              </div>
-            </Grid>
-            <Grid item xs={6}>
-              <div className={classes.Checkout}>
-                <button className={classes.CheckoutButton}>Checkout</button>
-              </div>
-            </Grid>
+      {/* <Fade in={open}> */}
+      <div className={classes.paper}>
+        <Grid container direction="row" justify="center" alignItems="center">
+          <Grid item xs={11}>
+            <Alert severity="success" className={classes.alert}>
+              Added to Bag
+            </Alert>
           </Grid>
-        </div>
-      </Fade>
+          <Grid item xs={1}>
+            <CloseIcon className={classes.iconClose} onClick={handleClose} />
+          </Grid>
+          <Grid item xs={6}>
+            <img src={productDispatch.img} className={classes.img} />
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="h6" component="h6">
+              {productDispatch.name}
+            </Typography>
+            <Typography variant="p" component="p">
+              {productDispatch.message}
+            </Typography>
+            <Typography variant="p" component="p">
+              Size {productDispatch.name}
+            </Typography>
+            <Typography variant="inherit" component="span">
+              {productDispatch.price.toLocaleString()}
+            </Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <div className={classes.Checkout}>
+              {/* to={{pathname: `/cart/${item._id}`}} */}
+              <Link to="/cart">
+                <button className={classes.CheckoutButton}>
+                  View Bag({sumQuantity})
+                </button>
+              </Link>
+            </div>
+          </Grid>
+          <Grid item xs={6}>
+            <Link to="/cart">
+              <button
+                className={classes.CheckoutButton}
+                //   onClick={() => {
+                //     history.push("/cart");
+                //   }}
+              >
+                Checkout
+              </button>
+            </Link>
+          </Grid>
+        </Grid>
+      </div>
+      {/* </Fade> */}
     </Modal>
   );
 };

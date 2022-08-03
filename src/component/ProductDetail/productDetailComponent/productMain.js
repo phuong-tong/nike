@@ -156,7 +156,7 @@ const ProductMain = ({ detailProduct, getIndexImg, indexPress }) => {
     img: detailProduct.imgDetails[indexPress].imgs[indexPress].img,
   };
 
-  const productFav = {
+  const favorProduct = {
     id: detailProduct._id,
     name: detailProduct.name,
     message: detailProduct.message,
@@ -194,6 +194,26 @@ const ProductMain = ({ detailProduct, getIndexImg, indexPress }) => {
           payload: productDispatch,
         })
       );
+    }
+  };
+
+  const checkSizeFavor = () => {
+    if (size === "") {
+      setFlag(true);
+      return;
+    }
+    setFlag(false);
+    const userLocal = JSON.parse(localStorage.getItem("user"));
+    if (!userLocal) {
+      alert("Please sign in");
+    } else {
+      dispatch(
+        action.createAction({
+          type: ActionType.ADD_TO_CARDFAVOR,
+          payload: favorProduct,
+        })
+      );
+      dispatch(action.postFavorAPICart());
     }
   };
 
@@ -356,6 +376,32 @@ const ProductMain = ({ detailProduct, getIndexImg, indexPress }) => {
       </Grid>
 
       {/* add to favorite */}
+      <Grid item xs={12}>
+        {isLoading ? (
+          <Skeleton width="100%">
+            <button className={classes.Favorite}>
+              Favorite
+              <img
+                src="https://icon-library.com/images/heart-icon-svg/heart-icon-svg-17.jpg"
+                className={classes.FavoriteBorderIcon}
+              />
+            </button>
+          </Skeleton>
+        ) : (
+          <button
+            className={classes.Favorite}
+            onClick={() => {
+              checkSizeFavor();
+            }}
+          >
+            Favorite
+            <img
+              src="https://icon-library.com/images/heart-icon-svg/heart-icon-svg-17.jpg"
+              className={classes.FavoriteBorderIcon}
+            />
+          </button>
+        )}
+      </Grid>
 
       {/* Modaltransition */}
       <Modaltransition
